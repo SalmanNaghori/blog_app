@@ -1,10 +1,13 @@
 import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/navigation_manager.dart';
+import 'package:blog_app/feature/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/feature/presentation/screen/login_screen.dart';
 import 'package:blog_app/feature/presentation/widget/auth_text_field.dart';
 import 'package:blog_app/feature/presentation/widget/title_widget.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widget/auth_gradient_button.dart';
 
@@ -63,7 +66,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               AuthGradientButton(
                 buttonTitle: AppString.signUp,
-                onPress: () {},
+                onPress: () {
+                  if (formKey.currentState!.validate()) {
+                    context.read<AuthBloc>().add(AuthSignUp(
+                      name: nameTextController.text.trim(),
+                      email: emailTextController.text.trim(),
+                      password: passwordTextController.text.trim(),));
+                  }
+                },
               ),
               const SizedBox(
                 height: 20,
@@ -75,15 +85,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: RichText(
                   text: TextSpan(
                     text: "${AppString.alreadyHaveAccount} ",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium,
                     children: [
                       TextSpan(
                         text: AppString.signInLogin,
                         style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: AppPallete.gradient2,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                          color: AppPallete.gradient2,
+                          fontWeight: FontWeight.bold,
+                        ),
                       )
                     ],
                   ),

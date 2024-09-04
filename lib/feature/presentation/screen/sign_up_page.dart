@@ -1,6 +1,8 @@
+import 'package:blog_app/core/common/widget/loader.dart';
 import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/navigation_manager.dart';
+import 'package:blog_app/core/utils/show_snackbar.dart';
 import 'package:blog_app/feature/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/feature/presentation/screen/login_screen.dart';
 import 'package:blog_app/feature/presentation/widget/auth_text_field.dart';
@@ -8,6 +10,7 @@ import 'package:blog_app/feature/presentation/widget/title_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../widget/auth_gradient_button.dart';
 
@@ -28,86 +31,98 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(15.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const TitleWidget(
-                title: AppString.signUp,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              AuthTextField(
-                hintText: AppString.name,
-                controller: nameTextController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              AuthTextField(
-                hintText: AppString.email,
-                controller: emailTextController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              AuthTextField(
-                hintText: AppString.password,
-                controller: passwordTextController,
-                isObscureText: true,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              AuthGradientButton(
-                buttonTitle: AppString.signUp,
-                onPress: () {
-                  if (formKey.currentState!.validate()) {
-                    context.read<AuthBloc>().add(AuthSignUp(
-                      name: nameTextController.text.trim(),
-                      email: emailTextController.text.trim(),
-                      password: passwordTextController.text.trim(),));
-                  }
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  navigateToPageAndRemoveAllPages(const LoginScreen());
-                },
-                child: RichText(
-                  text: TextSpan(
-                    text: "${AppString.alreadyHaveAccount} ",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleMedium,
-                    children: [
-                      TextSpan(
-                        text: AppString.signInLogin,
-                        style:
-                        Theme
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if(state is AuthFailure){
+              showSnackBar(context, state.message);
+            }
+          },
+          builder: (context, state) {
+            if(state is AuthLoading){
+               EasyLoading.show();
+            }
+            return Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const TitleWidget(
+                    title: AppString.signUp,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  AuthTextField(
+                    hintText: AppString.name,
+                    controller: nameTextController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AuthTextField(
+                    hintText: AppString.email,
+                    controller: emailTextController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AuthTextField(
+                    hintText: AppString.password,
+                    controller: passwordTextController,
+                    isObscureText: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  AuthGradientButton(
+                    buttonTitle: AppString.signUp,
+                    onPress: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(AuthSignUp(
+                          name: nameTextController.text.trim(),
+                          email: emailTextController.text.trim(),
+                          password: passwordTextController.text.trim(),));
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToPageAndRemoveAllPages(const LoginScreen());
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "${AppString.alreadyHaveAccount} ",
+                        style: Theme
                             .of(context)
                             .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                          color: AppPallete.gradient2,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+                            .titleMedium,
+                        children: [
+                          TextSpan(
+                            text: AppString.signInLogin,
+                            style:
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                              color: AppPallete.gradient2,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

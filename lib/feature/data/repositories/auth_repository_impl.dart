@@ -33,12 +33,13 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
 
-      logger.d("${right(user)}");
+      logger.d("Success:-${right(user.toString())}");
 
       return right(user);
     } on ServerExceptions catch (e) {
-      logger.e("Exception${e.toString()}");
-      throw left(Failure(e.toString()));
+      logger.e("Exception:-${e.toString()}");
+
+      return left(Failure(e.message));
     }
   }
 }

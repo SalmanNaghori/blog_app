@@ -1,4 +1,3 @@
-import 'package:blog_app/core/common/widget/loader.dart';
 import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/navigation_manager.dart';
@@ -7,10 +6,8 @@ import 'package:blog_app/feature/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/feature/presentation/screen/login_screen.dart';
 import 'package:blog_app/feature/presentation/widget/auth_text_field.dart';
 import 'package:blog_app/feature/presentation/widget/title_widget.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../widget/auth_gradient_button.dart';
 
@@ -35,13 +32,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: const EdgeInsets.all(15.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            if(state is AuthFailure){
+            if (state is AuthFailure) {
               showSnackBar(context, state.message);
             }
           },
           builder: (context, state) {
-            if(state is AuthLoading){
-               EasyLoading.show();
+            if (state is AuthLoading) {
+              // EasyLoading.show();
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return Form(
               key: formKey,
@@ -82,9 +82,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPress: () {
                       if (formKey.currentState!.validate()) {
                         context.read<AuthBloc>().add(AuthSignUp(
-                          name: nameTextController.text.trim(),
-                          email: emailTextController.text.trim(),
-                          password: passwordTextController.text.trim(),));
+                              name: nameTextController.text.trim(),
+                              email: emailTextController.text.trim(),
+                              password: passwordTextController.text.trim(),
+                            ));
                       }
                     },
                   ),
@@ -98,22 +99,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: RichText(
                       text: TextSpan(
                         text: "${AppString.alreadyHaveAccount} ",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                         children: [
                           TextSpan(
                             text: AppString.signInLogin,
-                            style:
-                            Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                              color: AppPallete.gradient2,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                  color: AppPallete.gradient2,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           )
                         ],
                       ),

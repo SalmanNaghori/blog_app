@@ -9,9 +9,14 @@ class UserModel extends User {
 
   factory UserModel.from(Map<String, dynamic> map) {
     return UserModel(
-      email: map["email"] ??'',
-      name: map["name"]??'',
-      id: map["id"]??'',
+      email: map["email"] ?? '',
+      name: map["name"] ?? '',
+      id: map["sub"] ?? '',
     );
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(email: $email, name: $name, id: $id)';
   }
 }

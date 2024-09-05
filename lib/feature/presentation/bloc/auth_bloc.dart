@@ -9,19 +9,22 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUp _userSignUp;
-
   AuthBloc({
     required UserSignUp userSignUp,
   })  : _userSignUp = userSignUp,
         super(AuthInitial()) {
     on<AuthSignUp>((event, emit) async {
       emit(AuthLoading());
-      final res = await _userSignUp(UserSignupParameter(
+      final res = await _userSignUp(UserSignUpParameter(
         name: event.name,
         password: event.password,
         email: event.email,
       ));
-      res.fold((l)=>emit(AuthFailure(l.message)), (user)=>emit(AuthSuccess(user)));
+      res.fold((failure) {
+        emit(AuthFailure(failure.message)); // Emit failure state with message
+      }, (user) {
+        emit(AuthSuccess(user));
+      });
     });
   }
 }

@@ -1,4 +1,5 @@
-import 'package:blog_app/core/error/failures.dart';
+import 'dart:convert';
+
 import 'package:blog_app/core/utils/logger_util.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,17 +38,20 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
     required String password,
   }) async {
     try {
-  final response=await    supabaseClient.auth.signUp(
+      final response = await supabaseClient.auth.signUp(
         password: password,
         email: email,
         data: {"name": name},
       );
-  if(response.user==null){
-    throw const ServerExceptions('User is null');
-  }
-   return UserModel.from(response.user!.toJson());
+      logger.f(json.encode(response.user?.userMetadata));
+
+      if (response.user == null) {
+        throw const ServerExceptions('User is null');
+      }
+      return UserModel.from(response.user?.userMetadata ?? {});
     } catch (e) {
-      logger.f("Server Exception ${e.toString()}");
+      logger.e("Server Exception ${e.toString()}");
+
       throw ServerExceptions(e.toString());
     }
   }

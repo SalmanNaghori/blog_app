@@ -2,33 +2,31 @@ import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/navigation_manager.dart';
 import 'package:blog_app/core/utils/show_snackbar.dart';
-import 'package:blog_app/feature/presentation/bloc/auth_bloc.dart';
-import 'package:blog_app/feature/presentation/screen/login_screen.dart';
-import 'package:blog_app/feature/presentation/widget/auth_text_field.dart';
-import 'package:blog_app/feature/presentation/widget/title_widget.dart';
+import 'package:blog_app/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:blog_app/feature/auth/presentation/screen/sign_up_page.dart';
+import 'package:blog_app/feature/auth/presentation/widget/auth_text_field.dart';
+import 'package:blog_app/feature/auth/presentation/widget/title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widget/auth_gradient_button.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final emailTextController = TextEditingController();
-  final nameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -50,17 +48,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const TitleWidget(
-                    title: AppString.signUp,
+                    title: AppString.signIn,
                   ),
                   const SizedBox(
                     height: 30,
-                  ),
-                  AuthTextField(
-                    hintText: AppString.name,
-                    controller: nameTextController,
-                  ),
-                  const SizedBox(
-                    height: 15,
                   ),
                   AuthTextField(
                     hintText: AppString.email,
@@ -78,14 +69,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   AuthGradientButton(
-                    buttonTitle: AppString.signUp,
+                    buttonTitle: AppString.signIn,
                     onPress: () {
                       if (formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(AuthSignUp(
-                              name: nameTextController.text.trim(),
-                              email: emailTextController.text.trim(),
-                              password: passwordTextController.text.trim(),
-                            ));
+                        context.read<AuthBloc>().add(AuthLogin(
+                            email: emailTextController.text.trim(),
+                            password: passwordTextController.text.trim()));
                       }
                     },
                   ),
@@ -94,20 +83,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      navigateToPageAndRemoveAllPages(const LoginScreen());
+                      navigateToPage(const SignUpScreen());
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: "${AppString.alreadyHaveAccount} ",
+                        text: "${AppString.dontHaveAccount} ",
                         style: Theme.of(context).textTheme.titleMedium,
                         children: [
                           TextSpan(
-                            text: AppString.signInLogin,
+                            text: AppString.signUp,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: AppPallete.gradient2,
+                                  color: AppPalette.gradient2,
                                   fontWeight: FontWeight.bold,
                                 ),
                           )
@@ -126,13 +115,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     disposeDataMember();
     super.dispose();
   }
 
   void disposeDataMember() {
-    nameTextController.dispose();
     emailTextController.dispose();
     passwordTextController.dispose();
   }

@@ -1,11 +1,11 @@
 import 'package:blog_app/core/theme/app_theme.dart';
-import 'package:blog_app/feature/presentation/bloc/auth_bloc.dart';
+import 'package:blog_app/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'core/navigation/global_key.dart';
-import 'feature/presentation/screen/login_screen.dart';
+import 'feature/auth/presentation/screen/login_screen.dart';
 import 'init_dependancies.dart';
 
 Future<void> main() async {
@@ -35,11 +35,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         navigatorKey: GlobalVariable.navigatorKey,
         theme: AppTheme.darkThemeMood,
-        builder:  EasyLoading.init(
+        builder: EasyLoading.init(
           builder: (context, child) {
             return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaleFactor: 1.0),
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
               child: child!,
             );
           },

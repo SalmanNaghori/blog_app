@@ -12,7 +12,7 @@ class AppTheme {
   static final darkThemeMood = ThemeData.dark(
     useMaterial3: true,
   ).copyWith(
-    appBarTheme: AppBarTheme(backgroundColor: AppPalette.backgroundColor),
+    appBarTheme: const AppBarTheme(backgroundColor: AppPalette.backgroundColor),
     scaffoldBackgroundColor: AppPalette.backgroundColor,
     inputDecorationTheme: InputDecorationTheme(
       focusedBorder: _border(AppPalette.gradient1),

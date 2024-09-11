@@ -45,11 +45,12 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
       if (response.user == null) {
         throw const ServerExceptions('User is null');
       }
-      return UserModel.from(response.user?.userMetadata ?? {});
+      return UserModel.from(response.user?.userMetadata ?? {})
+          .copyWith(email: currentUserSession!.user.email);
     } catch (e) {
-      logger.e("Server Exception ${e.toString()}");
+      logger.e("Server Exception ${e}");
 
-      throw ServerExceptions(e.toString());
+      throw e;
     }
   }
 
@@ -72,9 +73,9 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
       }
       return UserModel.from(response.user?.userMetadata ?? {});
     } catch (e) {
-      logger.e("Server Exception ${e.toString()}");
+      logger.e("Server Exception ${e}");
 
-      throw ServerExceptions(e.toString());
+      throw e;
     }
   }
 
@@ -87,13 +88,14 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
             .select()
             .eq('id', currentUserSession!.user.id);
         logger.f("Response===${userData.first}");
-        return UserModel.from(userData.first);
+        return UserModel.from(userData.first)
+            .copyWith(email: currentUserSession!.user.email);
       }
       return null;
       // if (res == null) {}
     } catch (e) {
-      logger.e("Server Exception ${e.toString()}");
-      throw ServerExceptions(e.toString());
+      logger.e("Server Exception ${e}");
+      throw e;
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
 

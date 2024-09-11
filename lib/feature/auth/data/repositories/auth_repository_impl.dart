@@ -2,7 +2,7 @@ import 'package:blog_app/core/error/exceptions.dart';
 import 'package:blog_app/core/error/failures.dart';
 import 'package:blog_app/core/utils/logger_util.dart';
 import 'package:blog_app/feature/auth/data/data_sources/auth_remote_data_source.dart';
-import 'package:blog_app/feature/auth/domain/entities/user.dart';
+import 'package:blog_app/core/common/entities/user.dart';
 import 'package:blog_app/feature/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
@@ -62,10 +62,16 @@ Future<Either<Failure, User>> _getUser(
     logger.d("Success:-${right(user.toString())}");
     return right(user);
   } on sb.AuthException catch (e) {
-    logger.e("AuthException:-${e.toString()}");
-    return left(Failure(e.message));
+    final errorMessage = e.message;
+    logger.e("AuthException: $errorMessage");
+    return left(Failure(errorMessage));
   } on ServerExceptions catch (e) {
-    logger.e("Exception:-${e.message}");
-    return left(Failure(e.message));
+    final errorMessage = e.message;
+    logger.e("ServerException: $errorMessage");
+    return left(Failure(errorMessage));
+  } catch (e) {
+    // Catch any other unexpected exceptions
+    logger.e("Unexpected exception: $e");
+    return left(Failure("An unexpected error occurred"));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:blog_app/core/constant/app_string.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
+import 'package:blog_app/core/utils/logger_util.dart';
 import 'package:blog_app/core/utils/navigation_manager.dart';
 import 'package:blog_app/core/utils/show_snackbar.dart';
 import 'package:blog_app/feature/auth/presentation/bloc/auth_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:blog_app/feature/auth/presentation/widget/auth_text_field.dart';
 import 'package:blog_app/feature/auth/presentation/widget/title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../widget/auth_gradient_button.dart';
 
@@ -33,16 +35,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
+              logger.i("AuthFailure");
+              EasyLoading.dismiss();
               showSnackBar(context, state.message);
             }
           },
           builder: (context, state) {
             if (state is AuthLoading) {
-              // EasyLoading.show();
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              logger.i("Loading state");
+              EasyLoading.show();
+              // return Center(
+              //   child: CircularProgressIndicator(),
+              // );
             }
+            if (state is AuthSuccess) {
+              // return Center(
+              //   child: CircularProgressIndicator(),
+              // );
+              logger.i("Success full");
+
+              EasyLoading.dismiss();
+            }
+
             return Form(
               key: formKey,
               child: Column(
@@ -81,6 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     buttonTitle: AppString.signUp,
                     onPress: () {
                       if (formKey.currentState!.validate()) {
+                        EasyLoading.show();
                         context.read<AuthBloc>().add(AuthSignUp(
                               name: nameTextController.text.trim(),
                               email: emailTextController.text.trim(),

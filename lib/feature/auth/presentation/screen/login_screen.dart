@@ -8,6 +8,7 @@ import 'package:blog_app/feature/auth/presentation/widget/auth_text_field.dart';
 import 'package:blog_app/feature/auth/presentation/widget/title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../widget/auth_gradient_button.dart';
 
@@ -36,11 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           builder: (context, state) {
             if (state is AuthLoading) {
-              // EasyLoading.show();
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              EasyLoading.show();
+              // return Center(
+              //   child: CircularProgressIndicator(),
+              // );
             }
+            if (state is AuthSuccess) {
+              EasyLoading.dismiss();
+            }
+
             return Form(
               key: formKey,
               child: Column(

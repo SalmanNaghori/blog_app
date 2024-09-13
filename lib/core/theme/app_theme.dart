@@ -14,6 +14,9 @@ class AppTheme {
   ).copyWith(
     appBarTheme: const AppBarTheme(backgroundColor: AppPalette.backgroundColor),
     scaffoldBackgroundColor: AppPalette.backgroundColor,
+    chipTheme: const ChipThemeData(
+        color: WidgetStatePropertyAll(AppPalette.backgroundColor),
+        side: BorderSide.none),
     inputDecorationTheme: InputDecorationTheme(
       focusedBorder: _border(AppPalette.gradient1),
       enabledBorder: _border(),

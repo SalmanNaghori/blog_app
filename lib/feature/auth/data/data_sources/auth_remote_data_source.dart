@@ -48,7 +48,7 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
       return UserModel.from(response.user?.userMetadata ?? {})
           .copyWith(email: currentUserSession!.user.email);
     } catch (e) {
-      logger.e("Server Exception ${e}");
+      logger.e("Server Exception loginWithEmailOrPassword ${e}");
 
       throw e;
     }
@@ -73,7 +73,7 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
       }
       return UserModel.from(response.user?.userMetadata ?? {});
     } catch (e) {
-      logger.e("Server Exception ${e}");
+      logger.e("Server Exception signUpWithEmailOrPassword ${e}");
 
       throw e;
     }
@@ -87,14 +87,19 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
             .from('profiles')
             .select()
             .eq('id', currentUserSession!.user.id);
-        logger.f("Response===${userData.first}");
-        return UserModel.from(userData.first)
-            .copyWith(email: currentUserSession!.user.email);
+
+        if (userData.isNotEmpty) {
+          logger.f("Response===${userData.first}");
+          return UserModel.from(userData.first)
+              .copyWith(email: currentUserSession!.user.email);
+        } else {
+          logger.w("No user data found for the current session");
+          return null; // Return null if no data found
+        }
       }
       return null;
-      // if (res == null) {}
     } catch (e) {
-      logger.e("Server Exception ${e}");
+      logger.e("Server Exception getCurrentUserData: $e");
       throw e;
     }
   }

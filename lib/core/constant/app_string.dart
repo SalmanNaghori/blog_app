@@ -9,5 +9,9 @@ class AppString {
   static const String password = "Password";
   static const String name = "Name";
   static const String anUnexpectedErrorOccur = "An Unexpected error occur";
+  static const String selectYourImage = "Select your image";
+
   static const String checkYourInternetConnection = "Check Internet Connection";
+  static const String blogTitle = "Blog title";
+  static const String blogDescription = "Blog Description";
 }

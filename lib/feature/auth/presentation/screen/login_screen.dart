@@ -33,9 +33,13 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state is AuthFailure) {
               showSnackBar(context, state.message);
+              EasyLoading.dismiss();
             }
           },
           builder: (context, state) {
+            if (state is AuthInitial) {
+              EasyLoading.dismiss();
+            }
             if (state is AuthLoading) {
               EasyLoading.show();
               // return Center(

@@ -2,6 +2,7 @@ import 'package:blog_app/core/common/cubits/app_user/app_user_cubit_cubit.dart';
 import 'package:blog_app/core/common/widget/loader.dart';
 import 'package:blog_app/core/theme/app_theme.dart';
 import 'package:blog_app/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:blog_app/feature/blog/presentation/pages/blog_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -67,11 +68,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, isLoggedIn) {
             if (isLoggedIn) {
               EasyLoading.dismiss();
-              return const Scaffold(
-                body: Center(
-                  child: Text("Hello guys"),
-                ),
-              );
+              return const BlogPage();
             }
             return const LoginScreen();
           },

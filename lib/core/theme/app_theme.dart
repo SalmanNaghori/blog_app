@@ -18,8 +18,10 @@ class AppTheme {
         color: WidgetStatePropertyAll(AppPalette.backgroundColor),
         side: BorderSide.none),
     inputDecorationTheme: InputDecorationTheme(
+      border: _border(),
       focusedBorder: _border(AppPalette.gradient1),
       enabledBorder: _border(),
+      errorBorder: _border(AppPalette.errorColor),
     ),
   );
 }

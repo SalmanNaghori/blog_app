@@ -31,3 +31,35 @@ class UserModel extends User {
     return 'UserModel(email: $email, name: $name, id: $id)';
   }
 }
+
+class CurrentUserModel extends User {
+  CurrentUserModel({
+    required super.email,
+    required super.name,
+    required super.id,
+  });
+
+  factory CurrentUserModel.from(Map<String, dynamic> map) {
+    return CurrentUserModel(
+      email: map["email"] ?? '',
+      name: map["name"] ?? '',
+      id: map["id"] ?? '',
+    );
+  }
+  CurrentUserModel copyWith({
+    String? email,
+    String? name,
+    String? id,
+  }) {
+    return CurrentUserModel(
+      email: email ?? this.email,
+      name: name ?? this.name,
+      id: id ?? this.id,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'CurrentUserModel(email: $email, name: $name, id: $id)';
+  }
+}

@@ -20,7 +20,7 @@ abstract interface class AuthRemoteDataSources {
     required String password,
   });
 
-  Future<UserModel?> getCurrentUserData();
+  Future<CurrentUserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
@@ -80,18 +80,18 @@ class AuthRemoteDataSourcesImpl implements AuthRemoteDataSources {
   }
 
   @override
-  Future<UserModel?> getCurrentUserData() async {
+  Future<CurrentUserModel?> getCurrentUserData() async {
     try {
       if (currentUserSession != null) {
-        final userData = await supabaseClient
+        final response = await supabaseClient
             .from('profiles')
             .select()
             .eq('id', currentUserSession!.user.id);
 
-        if (userData.isNotEmpty) {
-          logger.f("Response===${userData.first}");
-          return UserModel.from(userData.first)
-              .copyWith(email: currentUserSession!.user.email);
+        if (response.isNotEmpty) {
+          final userData = CurrentUserModel.from(response.first);
+          final data = userData.copyWith(email: currentUserSession!.user.email);
+          return data;
         } else {
           logger.w("No user data found for the current session");
           return null; // Return null if no data found

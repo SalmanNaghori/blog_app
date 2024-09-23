@@ -55,9 +55,9 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
         listener: (context, state) {
           if (state is BlogFailure) {
             showSnackBar(context, state.error);
-            logger.i("Failureess");
+            logger.i("Failures");
             EasyLoading.dismiss();
-          } else if (state is BlogSuccess) {
+          } else if (state is BlogUploadSuccess) {
             logger.i("Success");
 
             Future.delayed(const Duration(milliseconds: 1000), () {

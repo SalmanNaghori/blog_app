@@ -64,11 +64,12 @@ class BlogRemoteDataSourceImp extends BlogRemoteDataSource {
           await supabaseClient.from('blogs').select('*, profiles (name)');
       final response = blog
           .map((blog) => BlogModel.fromJson(blog)
-              .copyWith(posterName: blog['profile']['name']))
+              .copyWith(posterName: blog['profiles']['name']))
           .toList();
-      logger.f("Response==getAllBlogs: $response ");
+      logger.f("Response==getAllBlogs: $response");
       return response;
     } catch (e) {
+      logger.e("getAllBlogs==${e.toString()}");
       throw ServerExceptions(e.toString());
     }
   }

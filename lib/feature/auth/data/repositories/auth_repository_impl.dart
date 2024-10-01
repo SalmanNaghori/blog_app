@@ -1,5 +1,6 @@
 import 'package:blog_app/core/error/exceptions.dart';
 import 'package:blog_app/core/error/failures.dart';
+import 'package:blog_app/core/network/connetction_checker.dart';
 import 'package:blog_app/core/utils/logger_util.dart';
 import 'package:blog_app/feature/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:blog_app/core/common/entities/user.dart';
@@ -9,8 +10,8 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSources remoteDataSources;
-
-  AuthRepositoryImpl(this.remoteDataSources);
+  final ConnectionChecker connectionChecker;
+  AuthRepositoryImpl(this.remoteDataSources, this.connectionChecker);
 
   @override
   Future<Either<Failure, User>> currentUser() async {
@@ -52,26 +53,29 @@ class AuthRepositoryImpl implements AuthRepository {
               password: password,
             ));
   }
-}
 
-Future<Either<Failure, User>> _getUser(
-  Future<User> Function() fn,
-) async {
-  try {
-    final user = await fn();
-    logger.d("Success:-${right(user.toString())}");
-    return right(user);
-  } on sb.AuthException catch (e) {
-    final errorMessage = e.message;
-    logger.e("AuthException: $errorMessage");
-    return left(Failure(errorMessage));
-  } on ServerExceptions catch (e) {
-    final errorMessage = e.message;
-    logger.e("ServerException: $errorMessage");
-    return left(Failure(errorMessage));
-  } catch (e) {
-    // Catch any other unexpected exceptions
-    logger.e("Unexpected exception: $e");
-    return left(Failure("An unexpected error occurred"));
+  Future<Either<Failure, User>> _getUser(
+    Future<User> Function() fn,
+  ) async {
+    try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure("No internet connection"));
+      }
+      final user = await fn();
+      logger.d("Success:-${right(user.toString())}");
+      return right(user);
+    } on sb.AuthException catch (e) {
+      final errorMessage = e.message;
+      logger.e("AuthException: $errorMessage");
+      return left(Failure(errorMessage));
+    } on ServerExceptions catch (e) {
+      final errorMessage = e.message;
+      logger.e("ServerException: $errorMessage");
+      return left(Failure(errorMessage));
+    } catch (e) {
+      // Catch any other unexpected exceptions
+      logger.e("Unexpected exception: $e");
+      return left(Failure("An unexpected error occurred"));
+    }
   }
 }

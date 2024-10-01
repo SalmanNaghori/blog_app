@@ -1,22 +1,15 @@
 import 'dart:async';
 
 import 'package:blog_app/core/common/cubits/app_user/app_user_cubit_cubit.dart';
-import 'package:blog_app/core/constant/app_string.dart';
-import 'package:blog_app/core/navigation/global_key.dart';
-import 'package:blog_app/core/usecase/usecase.dart';
-import 'package:blog_app/core/utils/app_utils.dart';
-import 'package:blog_app/core/utils/logger_util.dart';
-import 'package:blog_app/core/utils/show_snackbar.dart';
 import 'package:blog_app/core/common/entities/user.dart';
+import 'package:blog_app/core/usecase/usecase.dart';
 import 'package:blog_app/feature/auth/domain/usecase/current_user.dart';
 import 'package:blog_app/feature/auth/domain/usecase/user_login.dart';
 import 'package:blog_app/feature/auth/domain/usecase/user_sign_us.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -49,42 +42,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //Todo: signUp method bloc
   Future<void> _onAuthSignUp(AuthSignUp event, Emitter<AuthState> emit) async {
-    if (await checkInternetConnection()) {
-      final res = await _userSignUp(UserSignUpParameter(
-        name: event.name,
-        password: event.password,
-        email: event.email,
-      ));
-      res.fold((failure) {
-        emit(AuthFailure(failure.message)); // Emit failure state with message
-      }, (user) => _emitAuthSuccess(user, emit));
-    } else {
-      showSnackBar(
-        GlobalVariable.appContext,
-        AppString.checkYourInternetConnection,
-        color: Colors.red,
-      );
-      EasyLoading.dismiss();
-    }
+    final res = await _userSignUp(UserSignUpParameter(
+      name: event.name,
+      password: event.password,
+      email: event.email,
+    ));
+    res.fold((failure) {
+      emit(AuthFailure(failure.message)); // Emit failure state with message
+    }, (user) => _emitAuthSuccess(user, emit));
   }
 
   //Todo: Login method bloc
   Future<void> _onAuthLogin(AuthLogin event, Emitter<AuthState> emit) async {
-    if (await checkInternetConnection()) {
-      final res = await _userLogin(
-        UserLoginParams(password: event.password, email: event.email),
-      );
-      res.fold((failure) {
-        emit(AuthFailure(failure.message)); // Emit failure state with message
-      }, (user) => _emitAuthSuccess(user, emit));
-    } else {
-      showSnackBar(
-        GlobalVariable.appContext,
-        AppString.checkYourInternetConnection,
-        color: Colors.red,
-      );
-      EasyLoading.dismiss();
-    }
+    final res = await _userLogin(
+      UserLoginParams(password: event.password, email: event.email),
+    );
+    res.fold((failure) {
+      emit(AuthFailure(failure.message)); // Emit failure state with message
+    }, (user) => _emitAuthSuccess(user, emit));
   }
 
   void _emitAuthSuccess(User user, Emitter<AuthState> emit) {

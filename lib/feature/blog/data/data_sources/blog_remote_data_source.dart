@@ -34,7 +34,7 @@ class BlogRemoteDataSourceImp extends BlogRemoteDataSource {
         throw Exception("Failed to insert blog: No data returned.");
       }
     } catch (e) {
-      logger.e("Error uploading blog: ${e}");
+      logger.e("Error uploading blog: $e");
       throw Exception("Error uploading blog: $e");
     }
   }
@@ -52,7 +52,7 @@ class BlogRemoteDataSourceImp extends BlogRemoteDataSource {
           .from("blog_images")
           .getPublicUrl(blogModel.id);
     } catch (e) {
-      logger.e("Error uploading Image: ${e}");
+      logger.e("Error uploading Image: $e");
       throw e;
     }
   }

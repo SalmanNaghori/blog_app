@@ -12,7 +12,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'core/navigation/global_key.dart';
 import 'feature/auth/presentation/screen/login_screen.dart';
-import 'init_dependancies.dart';
+import 'init_dependencies.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,5 @@
 import 'package:blog_app/core/common/cubits/app_user/app_user_cubit_cubit.dart';
+import 'package:blog_app/core/network/connetction_checker.dart';
 import 'package:blog_app/feature/auth/domain/repository/auth_repository.dart';
 import 'package:blog_app/feature/auth/domain/usecase/current_user.dart';
 import 'package:blog_app/feature/auth/domain/usecase/user_login.dart';
@@ -9,6 +10,7 @@ import 'package:blog_app/feature/blog/domain/repositories/blog_repository.dart';
 import 'package:blog_app/feature/blog/domain/usecase/get_all_blog.dart';
 import 'package:blog_app/feature/blog/domain/usecase/upload_blog.dart';
 import 'package:blog_app/feature/blog/presentation/bloc/blog_bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,6 +31,13 @@ Future<void> initDependencies() async {
   );
   serviceLocator.registerLazySingleton(() => supabase.client);
   serviceLocator.registerLazySingleton(() => AppUserCubit());
+  serviceLocator.registerFactory(() => Connectivity());
+
+  serviceLocator.registerFactory<ConnectionChecker>(
+    () => ConnectionCheckerImpl(
+      serviceLocator(),
+    ),
+  );
 }
 
 void _authInit() {
@@ -43,6 +52,7 @@ void _authInit() {
     //Repository
     ..registerFactory<AuthRepository>(
       () => AuthRepositoryImpl(
+        serviceLocator(),
         serviceLocator(),
       ),
     )

@@ -153,8 +153,7 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
                                   color: selectTopic.contains(e)
                                       ? const WidgetStatePropertyAll(
                                           AppPalette.gradient1)
-                                      : const WidgetStatePropertyAll(
-                                          AppPalette.backgroundColor),
+                                      : null,
                                   label: Text(e),
                                   side: selectTopic.contains(e)
                                       ? null
